@@ -152,7 +152,7 @@ cd front
 ```
 
 ```bash
-npm start
+ng serve
 ```
 
 L'application Angular est accessible à l'adresse `http://localhost:4200`.
