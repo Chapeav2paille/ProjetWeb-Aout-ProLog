@@ -1,0 +1,21 @@
+<div class="connexion">
+  <h1>ProManLog — Connexion</h1>
+
+  <form [formGroup]="connexionForm" (ngSubmit)="soumettre()">
+    <label for="nomUtilisateur">Nom d'utilisateur</label>
+    <input id="nomUtilisateur" formControlName="nomUtilisateur" autocomplete="username">
+
+    <label for="motDePasse">Mot de passe</label>
+    <input id="motDePasse" type="password" formControlName="motDePasse" autocomplete="current-password">
+
+    <p>
+      <button type="submit" [disabled]="connexionForm.invalid || enCours()">
+        {{ enCours() ? 'Connexion...' : 'Se connecter' }}
+      </button>
+    </p>
+
+    @if (erreur()) {
+      <p class="erreur">{{ erreur() }}</p>
+    }
+  </form>
+</div>

@@ -1,0 +1,22 @@
+<div class="layout">
+  @if (authService.estConnecte()) {
+    <header class="barre">
+      <span class="marque">ProManLog</span>
+      <nav class="menu">
+        <a routerLink="/tableau-bord" routerLinkActive="active">Tableau de bord</a>
+        <a routerLink="/prestations" routerLinkActive="active">Prestations</a>
+        <a routerLink="/clients" routerLinkActive="active">Clients</a>
+        <a routerLink="/flotte" routerLinkActive="active">Flotte</a>
+        <a routerLink="/ressources-humaines" routerLinkActive="active">RH</a>
+        <a routerLink="/chiffres" routerLinkActive="active">Chiffres</a>
+        <a routerLink="/historique" routerLinkActive="active">Historique</a>
+      </nav>
+      <span class="utilisateur">{{ authService.utilisateur() }}</span>
+      <button type="button" (click)="deconnexion()">Déconnexion</button>
+    </header>
+  }
+
+  <main class="contenu">
+    <router-outlet></router-outlet>
+  </main>
+</div>

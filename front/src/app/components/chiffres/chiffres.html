@@ -1,0 +1,102 @@
+<div>
+  <h1>Chiffres</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  @if (chiffres(); as bilan) {
+    <div class="indicateurs">
+      <div class="indicateur">
+        <div class="valeur">{{ bilan.total.chiffreAffaire | number:'1.2-2' }}</div>
+        <div class="libelle">Chiffre d'affaires (6 mois)</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bilan.total.totalCharges | number:'1.2-2' }}</div>
+        <div class="libelle">Total des charges fixes</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bilan.total.tvaAReverser | number:'1.2-2' }}</div>
+        <div class="libelle">TVA à reverser</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur" [class]="bilan.total.resultatAvantImpot >= 0 ? 'valeur statut-vert' : 'valeur statut-rouge'">
+          {{ bilan.total.resultatAvantImpot | number:'1.2-2' }}
+        </div>
+        <div class="libelle">Résultat avant impôt</div>
+      </div>
+    </div>
+
+    <h2>Récapitulatif mensuel</h2>
+    <p class="muted">
+      TVA appliquée : {{ bilan.tauxTva | percent:'1.0-0' }}. Les salaires ne sont pas déductibles de la TVA.
+    </p>
+
+    <div class="tableur">
+      <table>
+        <thead>
+          <tr>
+            <th rowspan="2">Période</th>
+            <th rowspan="2">Chiffre d'affaires</th>
+            <th colspan="6">Charges fixes</th>
+            <th colspan="3">TVA</th>
+            <th rowspan="2">Résultat avant impôt</th>
+          </tr>
+          <tr>
+            <th>Salaire</th>
+            <th>Frais</th>
+            <th>Loyer</th>
+            <th>Facture</th>
+            <th>Essence</th>
+            <th>Total</th>
+            <th>Encaissée</th>
+            <th>Payée</th>
+            <th>À reverser</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (ligne of bilan.lignes; track ligne.periode) {
+            <tr>
+              <th class="periode">{{ ligne.periode }}</th>
+              <td>{{ ligne.chiffreAffaire | number:'1.2-2' }}</td>
+              <td>{{ ligne.salaire | number:'1.2-2' }}</td>
+              <td>{{ ligne.frais | number:'1.2-2' }}</td>
+              <td>{{ ligne.loyer | number:'1.2-2' }}</td>
+              <td>{{ ligne.facture | number:'1.2-2' }}</td>
+              <td>{{ ligne.essence | number:'1.2-2' }}</td>
+              <td class="sous-total">{{ ligne.totalCharges | number:'1.2-2' }}</td>
+              <td>{{ ligne.tvaEncaissee | number:'1.2-2' }}</td>
+              <td>{{ ligne.tvaPayee | number:'1.2-2' }}</td>
+              <td class="sous-total">{{ ligne.tvaAReverser | number:'1.2-2' }}</td>
+              <td [class]="ligne.resultatAvantImpot >= 0 ? 'statut-vert' : 'statut-rouge'">
+                {{ ligne.resultatAvantImpot | number:'1.2-2' }}
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="12" class="muted">Aucune donnée.</td></tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <th class="periode">{{ bilan.total.periode }}</th>
+            <td>{{ bilan.total.chiffreAffaire | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.salaire | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.frais | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.loyer | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.facture | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.essence | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.totalCharges | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.tvaEncaissee | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.tvaPayee | number:'1.2-2' }}</td>
+            <td>{{ bilan.total.tvaAReverser | number:'1.2-2' }}</td>
+            <td [class]="bilan.total.resultatAvantImpot >= 0 ? 'statut-vert' : 'statut-rouge'">
+              {{ bilan.total.resultatAvantImpot | number:'1.2-2' }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  } @else {
+    <p class="muted">Chargement...</p>
+  }
+</div>

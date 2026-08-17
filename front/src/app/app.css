@@ -1,0 +1,44 @@
+.layout {
+  min-height: 100vh;
+}
+
+.barre {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+
+.marque {
+  font-weight: 700;
+}
+
+.menu {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  color: #333;
+  text-decoration: none;
+  padding: 2px 0;
+}
+
+.menu a.active {
+  font-weight: 600;
+  color: #1a56b0;
+  border-bottom: 2px solid #1a56b0;
+}
+
+.utilisateur {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.contenu {
+  padding: 20px 24px;
+}

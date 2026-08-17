@@ -1,0 +1,89 @@
+<div>
+  <h1>Flotte</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  <button type="button" (click)="ouvrirFormulaire()">+ Ajouter un véhicule</button>
+
+  @if (afficherFormulaire()) {
+    <form [formGroup]="vehiculeForm" (ngSubmit)="soumettre()">
+      <h2>{{ modeEdition() ? 'Modifier le véhicule' : 'Nouveau véhicule' }}</h2>
+
+      <label for="immatriculation">Immatriculation</label>
+      <input id="immatriculation" formControlName="immatriculation">
+
+      <label for="typeVehicule">Type de véhicule</label>
+      <input id="typeVehicule" formControlName="typeVehicule" placeholder="Camion 19T, Fourgon...">
+
+      <label for="capaciteKg">Capacité (kg)</label>
+      <input id="capaciteKg" type="number" formControlName="capaciteKg">
+
+      <label for="kilometrage">Kilométrage (km)</label>
+      <input id="kilometrage" type="number" formControlName="kilometrage">
+
+      <label for="statut">Statut</label>
+      <select id="statut" formControlName="statut">
+        <option value="Disponible">Disponible</option>
+        <option value="EnMission">En mission</option>
+        <option value="EnMaintenance">En maintenance</option>
+      </select>
+
+      <label for="dernierEntretien">Date du dernier entretien</label>
+      <input id="dernierEntretien" type="date" formControlName="dernierEntretien">
+
+      <label for="prochainEntretien">Date du prochain entretien</label>
+      <input id="prochainEntretien" type="date" formControlName="prochainEntretien">
+
+      <label for="prochainControleTechnique">Prochain contrôle technique</label>
+      <input id="prochainControleTechnique" type="date" formControlName="prochainControleTechnique">
+
+      <label for="finAssurance">Fin d'assurance</label>
+      <input id="finAssurance" type="date" formControlName="finAssurance">
+
+      <p>
+        <button type="submit" [disabled]="vehiculeForm.invalid">
+          {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" (click)="fermerFormulaire()">Annuler</button>
+      </p>
+    </form>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Immatriculation</th><th>Type</th><th>Capacité (kg)</th><th>Kilométrage</th>
+        <th>Statut</th><th>Dernier entretien</th><th>Contrôle technique</th><th>Fin assurance</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (vehicule of vehicules(); track vehicule.idVehicule) {
+        <tr>
+          <td>{{ vehicule.immatriculation }}</td>
+          <td>{{ vehicule.typeVehicule }}</td>
+          <td>{{ vehicule.capaciteKg }}</td>
+          <td>{{ vehicule.kilometrage }} km</td>
+          <td>
+            @switch (vehicule.statut) {
+              @case ('Disponible')    { <span class="statut-vert">Disponible</span> }
+              @case ('EnMission')     { <span class="statut-orange">En mission</span> }
+              @case ('EnMaintenance') { <span class="statut-rouge">En maintenance</span> }
+              @default                { <span>{{ vehicule.statut }}</span> }
+            }
+          </td>
+          <td>{{ vehicule.dernierEntretien | date:'dd/MM/yyyy' }}</td>
+          <td>{{ vehicule.prochainControleTechnique | date:'dd/MM/yyyy' }}</td>
+          <td>{{ vehicule.finAssurance | date:'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button type="button" (click)="ouvrirEdition(vehicule)">Modifier</button>
+            <button type="button" (click)="supprimer(vehicule.idVehicule)">Supprimer</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="9" class="muted">Aucun véhicule.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

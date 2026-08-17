@@ -1,0 +1,49 @@
+<div>
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  @if (client(); as fiche) {
+    <h1>{{ fiche.nom }}</h1>
+    <p><a routerLink="/clients">Retour à la liste</a></p>
+
+    <table class="fiche">
+      <tbody>
+        <tr><th>Type</th><td>{{ fiche.typeClient }}</td></tr>
+        <tr><th>Contact</th><td>{{ fiche.contact || '-' }}</td></tr>
+        <tr><th>Email</th><td>{{ fiche.email || '-' }}</td></tr>
+        <tr><th>Téléphone</th><td>{{ fiche.telephone || '-' }}</td></tr>
+        <tr><th>Adresse</th><td>{{ fiche.adresse || '-' }}</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Historique des prestations</h2>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Trajet</th><th>Date et heure</th><th>Type</th><th>Prix</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        @for (prestation of prestations(); track prestation.idPrestation) {
+          <tr>
+            <td>{{ prestation.idPrestation }}</td>
+            <td>{{ prestation.adresseDepart }} vers {{ prestation.adresseArrivee }}</td>
+            <td>{{ prestation.dateHeure | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ prestation.typeService }}</td>
+            <td>{{ prestation.prix }}</td>
+            <td>
+              @switch (prestation.statut) {
+                @case ('Planifiee') { <span class="statut-gris">Planifiée</span> }
+                @case ('EnCours')   { <span class="statut-orange">En cours</span> }
+                @case ('Terminee')  { <span class="statut-vert">Terminée</span> }
+                @case ('Annulee')   { <span class="statut-rouge">Annulée</span> }
+                @default            { <span>{{ prestation.statut }}</span> }
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="muted">Aucune prestation pour ce client.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

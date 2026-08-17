@@ -1,0 +1,11 @@
+.filtres input,
+.filtres select {
+  min-width: 140px;
+}
+
+.legende {
+  display: flex;
+  gap: 16px;
+  font-size: 0.85rem;
+  margin: 8px 0;
+}

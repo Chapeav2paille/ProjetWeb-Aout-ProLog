@@ -1,0 +1,36 @@
+.tableur {
+  overflow-x: auto;
+}
+
+.tableur table {
+  border: 1px solid #ccc;
+  font-variant-numeric: tabular-nums;
+}
+
+.tableur th,
+.tableur td {
+  border: 1px solid #e0e0e0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tableur thead th {
+  text-align: center;
+  background: #eee;
+}
+
+.tableur th.periode {
+  text-align: left;
+  background: #f7f7f7;
+}
+
+.tableur .sous-total {
+  background: #fafafa;
+  font-weight: 600;
+}
+
+.tableur tfoot td,
+.tableur tfoot th {
+  background: #eee;
+  font-weight: 700;
+}

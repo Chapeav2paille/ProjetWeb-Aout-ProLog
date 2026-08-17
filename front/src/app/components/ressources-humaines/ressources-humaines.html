@@ -1,0 +1,118 @@
+<div>
+  <h1>Ressources humaines</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  <button type="button" (click)="ouvrirFormulaire()">+ Ajouter un employé</button>
+
+  @if (afficherFormulaire()) {
+    <form [formGroup]="employeForm" (ngSubmit)="soumettre()">
+      <h2>{{ modeEdition() ? "Modifier l'employé" : 'Nouvel employé' }}</h2>
+
+      <label for="prenom">Prénom</label>
+      <input id="prenom" formControlName="prenom">
+
+      <label for="nom">Nom</label>
+      <input id="nom" formControlName="nom">
+
+      <label for="poste">Poste</label>
+      <select id="poste" formControlName="poste">
+        <option value="Chauffeur">Chauffeur</option>
+        <option value="Mecanicien">Mécanicien</option>
+        <option value="Gestionnaire">Gestionnaire</option>
+      </select>
+
+      <label for="dateEmbauche">Date d'embauche</label>
+      <input id="dateEmbauche" type="date" formControlName="dateEmbauche">
+
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email">
+
+      <label for="telephone">Téléphone</label>
+      <input id="telephone" formControlName="telephone">
+
+      <label for="statut">Statut</label>
+      <select id="statut" formControlName="statut">
+        <option value="Actif">Actif</option>
+        <option value="Inactif">Inactif</option>
+      </select>
+
+      <label for="disponibilite">Disponibilité</label>
+      <select id="disponibilite" formControlName="disponibilite">
+        <option value="Disponible">Disponible</option>
+        <option value="EnConge">En congé</option>
+        <option value="EnMission">En mission</option>
+      </select>
+
+      @if (employeForm.value.poste === 'Chauffeur') {
+        <h2>Permis de conduire</h2>
+
+        <label for="numeroPermis">Numéro de permis</label>
+        <input id="numeroPermis" formControlName="numeroPermis">
+
+        <label for="categoriesPermis">Catégories</label>
+        <input id="categoriesPermis" formControlName="categoriesPermis" placeholder="B,C,CE">
+
+        <label for="expirationPermis">Date d'expiration</label>
+        <input id="expirationPermis" type="date" formControlName="expirationPermis">
+      }
+
+      <p>
+        <button type="submit" [disabled]="employeForm.invalid">
+          {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" (click)="fermerFormulaire()">Annuler</button>
+      </p>
+    </form>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom</th><th>Poste</th><th>Embauche</th><th>Contact</th>
+        <th>Statut</th><th>Disponibilité</th><th>Permis</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (employe of employes(); track employe.idEmploye) {
+        <tr>
+          <td>{{ employe.prenom }} {{ employe.nom }}</td>
+          <td>{{ employe.poste }}</td>
+          <td>{{ employe.dateEmbauche | date:'dd/MM/yyyy' }}</td>
+          <td>{{ employe.email || employe.telephone || '-' }}</td>
+          <td>
+            @switch (employe.statut) {
+              @case ('Actif')   { <span class="statut-vert">Actif</span> }
+              @case ('Inactif') { <span class="statut-gris">Inactif</span> }
+              @default          { <span>{{ employe.statut }}</span> }
+            }
+          </td>
+          <td>
+            @switch (employe.disponibilite) {
+              @case ('Disponible') { <span class="statut-vert">Disponible</span> }
+              @case ('EnMission')  { <span class="statut-orange">En mission</span> }
+              @case ('EnConge')    { <span class="statut-orange">En congé</span> }
+              @default             { <span>{{ employe.disponibilite }}</span> }
+            }
+          </td>
+          <td>
+            @if (employe.numeroPermis) {
+              {{ employe.numeroPermis }} ({{ employe.categoriesPermis }})
+              expire le {{ employe.expirationPermis | date:'dd/MM/yyyy' }}
+            } @else {
+              -
+            }
+          </td>
+          <td class="actions">
+            <button type="button" (click)="ouvrirEdition(employe)">Modifier</button>
+            <button type="button" (click)="supprimer(employe.idEmploye)">Supprimer</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="8" class="muted">Aucun employé.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,7 @@
+table.fiche {
+  max-width: 480px;
+}
+
+table.fiche th {
+  width: 140px;
+}

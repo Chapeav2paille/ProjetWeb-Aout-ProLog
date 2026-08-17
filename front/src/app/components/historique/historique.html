@@ -1,0 +1,69 @@
+<div>
+  <h1>Historique</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  <div class="filtres">
+    <div>
+      <label for="du">Du</label>
+      <input id="du" type="date" [value]="du()" (change)="changerDu($any($event.target).value)">
+    </div>
+    <div>
+      <label for="au">Au</label>
+      <input id="au" type="date" [value]="au()" (change)="changerAu($any($event.target).value)">
+    </div>
+    <div>
+      <label for="typeAction">Type d'action</label>
+      <select id="typeAction" [value]="typeAction()" (change)="changerTypeAction($any($event.target).value)">
+        <option value="">Toutes</option>
+        <option value="Creation">Ajout</option>
+        <option value="Modification">Modification</option>
+        <option value="ChangementStatut">Changement de statut</option>
+        <option value="Suppression">Suppression</option>
+      </select>
+    </div>
+  </div>
+
+  <p class="legende">
+    <span class="action-ajout">Ajout</span>
+    <span class="action-modification">Modification</span>
+    <span class="action-suppression">Suppression</span>
+    <span class="action-statut">Changement de statut</span>
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>ID</th><th>Date</th><th>Action</th><th>Entité</th><th>Description</th></tr>
+    </thead>
+    <tbody>
+      @for (entree of historique(); track entree.idHistorique) {
+        <tr>
+          <td>{{ entree.idHistorique }}</td>
+          <td>{{ entree.dateAction | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>
+            @switch (entree.typeAction) {
+              @case ('Creation')         { <span class="action-ajout">Ajout</span> }
+              @case ('Modification')     { <span class="action-modification">Modification</span> }
+              @case ('Suppression')      { <span class="action-suppression">Suppression</span> }
+              @case ('ChangementStatut') { <span class="action-statut">Changement de statut</span> }
+              @default                   { <span>{{ entree.typeAction }}</span> }
+            }
+          </td>
+          <td>{{ entree.typeEntite }} @if (entree.idEntite) { #{{ entree.idEntite }} }</td>
+          <td>
+            @switch (entree.typeAction) {
+              @case ('Creation')     { <span class="action-ajout">{{ entree.description }}</span> }
+              @case ('Modification') { <span class="action-modification">{{ entree.description }}</span> }
+              @case ('Suppression')  { <span class="action-suppression">{{ entree.description }}</span> }
+              @default               { <span>{{ entree.description }}</span> }
+            }
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="5" class="muted">Aucune entrée.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

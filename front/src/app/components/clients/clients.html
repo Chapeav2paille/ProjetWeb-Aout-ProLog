@@ -1,0 +1,74 @@
+<div>
+  <h1>Clients</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  <button type="button" (click)="ouvrirFormulaire()">+ Ajouter un client</button>
+
+  @if (afficherFormulaire()) {
+    <form [formGroup]="clientForm" (ngSubmit)="soumettre()">
+      <h2>{{ modeEdition() ? 'Modifier le client' : 'Nouveau client' }}</h2>
+
+      <label for="typeClient">Type</label>
+      <select id="typeClient" formControlName="typeClient">
+        <option value="Entreprise">Entreprise</option>
+        <option value="Particulier">Particulier</option>
+      </select>
+
+      <label for="nom">Nom ou raison sociale</label>
+      <input id="nom" formControlName="nom">
+
+      @if (clientForm.value.typeClient === 'Entreprise') {
+        <label for="contact">Personne de contact</label>
+        <input id="contact" formControlName="contact">
+      }
+
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email">
+
+      <label for="telephone">Téléphone</label>
+      <input id="telephone" formControlName="telephone">
+
+      <label for="adresse">Adresse</label>
+      <input id="adresse" formControlName="adresse">
+
+      <p>
+        <button type="submit" [disabled]="clientForm.invalid">
+          {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" (click)="fermerFormulaire()">Annuler</button>
+      </p>
+    </form>
+  }
+
+  <table>
+    <thead>
+      <tr><th>Nom</th><th>Type</th><th>Contact</th><th>Email</th><th>Téléphone</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (client of clients(); track client.idClient) {
+        <tr>
+          <td><a routerLink="/clients/{{ client.idClient }}">{{ client.nom }}</a></td>
+          <td>
+            @switch (client.typeClient) {
+              @case ('Entreprise')  { Entreprise }
+              @case ('Particulier') { Particulier }
+              @default              { {{ client.typeClient }} }
+            }
+          </td>
+          <td>{{ client.contact || '-' }}</td>
+          <td>{{ client.email || '-' }}</td>
+          <td>{{ client.telephone || '-' }}</td>
+          <td class="actions">
+            <button type="button" (click)="ouvrirEdition(client)">Modifier</button>
+            <button type="button" (click)="supprimer(client.idClient)">Supprimer</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="6" class="muted">Aucun client.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

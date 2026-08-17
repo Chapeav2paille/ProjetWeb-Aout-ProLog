@@ -1,0 +1,125 @@
+<div>
+  <h1>Prestations</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  <div class="filtres">
+    <div>
+      <label for="filtreStatut">Filtrer par statut</label>
+      <select id="filtreStatut" [value]="filtreStatut()" (change)="changerFiltre($any($event.target).value)">
+        <option value="">Tous</option>
+        <option value="Planifiee">Planifiée</option>
+        <option value="EnCours">En cours</option>
+        <option value="Terminee">Terminée</option>
+        <option value="Annulee">Annulée</option>
+      </select>
+    </div>
+    <button type="button" (click)="ouvrirFormulaire()">+ Ajouter une prestation</button>
+  </div>
+
+  @if (afficherFormulaire()) {
+    <form [formGroup]="prestationForm" (ngSubmit)="soumettre()">
+      <h2>{{ modeEdition() ? 'Modifier la prestation' : 'Nouvelle prestation' }}</h2>
+
+      <label for="idClient">Client</label>
+      <select id="idClient" formControlName="idClient">
+        <option [ngValue]="null">-- Choisir un client --</option>
+        @for (client of clients(); track client.idClient) {
+          <option [ngValue]="client.idClient">{{ client.nom }}</option>
+        }
+      </select>
+
+      <label for="idVehicule">Véhicule</label>
+      <select id="idVehicule" formControlName="idVehicule">
+        <option [ngValue]="null">-- Non assigné --</option>
+        @for (vehicule of vehicules(); track vehicule.idVehicule) {
+          <option [ngValue]="vehicule.idVehicule">{{ vehicule.immatriculation }} ({{ vehicule.typeVehicule }})</option>
+        }
+      </select>
+
+      <label for="idEmploye">Chauffeur</label>
+      <select id="idEmploye" formControlName="idEmploye">
+        <option [ngValue]="null">-- Non assigné --</option>
+        @for (chauffeur of chauffeurs(); track chauffeur.idEmploye) {
+          <option [ngValue]="chauffeur.idEmploye">{{ chauffeur.prenom }} {{ chauffeur.nom }}</option>
+        }
+      </select>
+
+      <label for="adresseDepart">Adresse de départ</label>
+      <input id="adresseDepart" formControlName="adresseDepart">
+
+      <label for="adresseArrivee">Adresse d'arrivée</label>
+      <input id="adresseArrivee" formControlName="adresseArrivee">
+
+      <label for="dateHeure">Date et heure</label>
+      <input id="dateHeure" type="datetime-local" formControlName="dateHeure">
+
+      <label for="typeService">Type de marchandise ou de service</label>
+      <input id="typeService" formControlName="typeService">
+
+      <label for="prix">Prix</label>
+      <input id="prix" type="number" step="0.01" formControlName="prix">
+
+      <label for="statut">Statut</label>
+      <select id="statut" formControlName="statut">
+        <option value="Planifiee">Planifiée</option>
+        <option value="EnCours">En cours</option>
+        <option value="Terminee">Terminée</option>
+        <option value="Annulee">Annulée</option>
+      </select>
+
+      <p>
+        <button type="submit" [disabled]="prestationForm.invalid">
+          {{ modeEdition() ? 'Mettre à jour' : 'Ajouter' }}
+        </button>
+        <button type="button" (click)="fermerFormulaire()">Annuler</button>
+      </p>
+    </form>
+  }
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th><th>Client</th><th>Trajet</th><th>Date et heure</th><th>Type</th>
+        <th>Véhicule</th><th>Chauffeur</th><th>Prix</th><th>Statut</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (prestation of prestations(); track prestation.idPrestation) {
+        <tr>
+          <td>{{ prestation.idPrestation }}</td>
+          <td>{{ prestation.nomClient }}</td>
+          <td>{{ prestation.adresseDepart }} vers {{ prestation.adresseArrivee }}</td>
+          <td>{{ prestation.dateHeure | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ prestation.typeService }}</td>
+          <td>{{ prestation.immatriculationVehicule || '-' }}</td>
+          <td>{{ prestation.nomEmploye || '-' }}</td>
+          <td>{{ prestation.prix }}</td>
+          <td>
+            @switch (prestation.statut) {
+              @case ('Planifiee') { <span class="statut-gris">Planifiée</span> }
+              @case ('EnCours')   { <span class="statut-orange">En cours</span> }
+              @case ('Terminee')  { <span class="statut-vert">Terminée</span> }
+              @case ('Annulee')   { <span class="statut-rouge">Annulée</span> }
+              @default            { <span>{{ prestation.statut }}</span> }
+            }
+            <select [value]="prestation.statut" (change)="changerStatut(prestation, $any($event.target).value)">
+              <option value="Planifiee">Planifiée</option>
+              <option value="EnCours">En cours</option>
+              <option value="Terminee">Terminée</option>
+              <option value="Annulee">Annulée</option>
+            </select>
+          </td>
+          <td>
+            <button type="button" (click)="ouvrirEdition(prestation)">Modifier</button>
+            <button type="button" (click)="supprimer(prestation.idPrestation)">Supprimer</button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td colspan="10" class="muted">Aucune prestation.</td></tr>
+      }
+    </tbody>
+  </table>
+</div>

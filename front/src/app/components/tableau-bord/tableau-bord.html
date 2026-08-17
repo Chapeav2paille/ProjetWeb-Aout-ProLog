@@ -1,0 +1,167 @@
+<div>
+  <h1>Tableau de bord</h1>
+
+  @if (erreur()) {
+    <p class="erreur">{{ erreur() }}</p>
+  }
+
+  @if (tableauBord(); as bord) {
+    <div class="indicateurs">
+      <div class="indicateur">
+        <div class="valeur">{{ bord.prestationsEnCours }}</div>
+        <div class="libelle">Prestations en cours (ce mois)</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bord.prestationsTerminees }}</div>
+        <div class="libelle">Prestations terminées (ce mois)</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bord.chiffreAffaireDuMois | number:'1.0-0' }}</div>
+        <div class="libelle">Chiffre d'affaires du mois</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bord.vehiculesDisponibles }}</div>
+        <div class="libelle">Véhicules disponibles</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bord.vehiculesEnMission }}</div>
+        <div class="libelle">Véhicules en mission</div>
+      </div>
+      <div class="indicateur">
+        <div class="valeur">{{ bord.vehiculesEnMaintenance }}</div>
+        <div class="libelle">Véhicules en maintenance</div>
+      </div>
+    </div>
+
+    <h2>Chiffre d'affaires des 6 derniers mois</h2>
+    <div class="graphique">
+      <svg [attr.viewBox]="'0 0 ' + largeurGraphique + ' ' + (hauteurGraphique + 30)"
+           [attr.width]="largeurGraphique" [attr.height]="hauteurGraphique + 30">
+        <line x1="0" [attr.y1]="hauteurGraphique" [attr.x2]="largeurGraphique" [attr.y2]="hauteurGraphique"
+              stroke="#ccc" />
+        @for (barre of barres(); track barre.periode) {
+          <rect [attr.x]="barre.x" [attr.y]="barre.y"
+                [attr.width]="largeurBarre()" [attr.height]="barre.hauteur"
+                fill="#1a56b0" />
+          <text [attr.x]="barre.x + largeurBarre() / 2" [attr.y]="barre.y - 4"
+                text-anchor="middle" font-size="11" fill="#333">
+            {{ barre.montant | number:'1.0-0' }}
+          </text>
+          <text [attr.x]="barre.x + largeurBarre() / 2" [attr.y]="hauteurGraphique + 16"
+                text-anchor="middle" font-size="11" fill="#666">
+            {{ barre.periode }}
+          </text>
+        }
+      </svg>
+    </div>
+
+    <h2>Détail des prestations du mois</h2>
+    <table>
+      <thead>
+        <tr><th>#</th><th>Client</th><th>Trajet</th><th>Date et heure</th><th>Prix</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        @for (prestation of bord.prestationsDuMois; track prestation.idPrestation) {
+          <tr>
+            <td>{{ prestation.idPrestation }}</td>
+            <td>{{ prestation.nomClient }}</td>
+            <td>{{ prestation.adresseDepart }} vers {{ prestation.adresseArrivee }}</td>
+            <td>{{ prestation.dateHeure | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ prestation.prix | number:'1.2-2' }}</td>
+            <td>
+              @switch (prestation.statut) {
+                @case ('Planifiee') { <span class="statut-gris">Planifiée</span> }
+                @case ('EnCours')   { <span class="statut-orange">En cours</span> }
+                @case ('Terminee')  { <span class="statut-vert">Terminée</span> }
+                @case ('Annulee')   { <span class="statut-rouge">Annulée</span> }
+                @default            { <span>{{ prestation.statut }}</span> }
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="muted">Aucune prestation ce mois.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <h2>Détail de la flotte</h2>
+    <table>
+      <thead>
+        <tr><th>Immatriculation</th><th>Type</th><th>Kilométrage</th><th>Prochain entretien</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        @for (vehicule of bord.vehicules; track vehicule.idVehicule) {
+          <tr>
+            <td>{{ vehicule.immatriculation }}</td>
+            <td>{{ vehicule.typeVehicule }}</td>
+            <td>{{ vehicule.kilometrage | number:'1.0-0' }} km</td>
+            <td>{{ vehicule.prochainEntretien | date:'dd/MM/yyyy' }}</td>
+            <td>
+              @switch (vehicule.statut) {
+                @case ('Disponible')    { <span class="statut-vert">Disponible</span> }
+                @case ('EnMission')     { <span class="statut-orange">En mission</span> }
+                @case ('EnMaintenance') { <span class="statut-rouge">En maintenance</span> }
+                @default                { <span>{{ vehicule.statut }}</span> }
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="5" class="muted">Aucun véhicule.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <h2>Alertes</h2>
+    <table>
+      <thead>
+        <tr><th>Type</th><th>Échéance</th><th>Message</th></tr>
+      </thead>
+      <tbody>
+        @for (alerte of bord.alertes; track alerte.message) {
+          <tr>
+            <td>{{ alerte.typeAlerte }}</td>
+            <td>{{ alerte.dateEcheance | date:'dd/MM/yyyy' }}</td>
+            <td>
+              @switch (alerte.gravite) {
+                @case ('Critique')      { <span class="statut-rouge">{{ alerte.message }}</span> }
+                @case ('Avertissement') { <span class="statut-orange">{{ alerte.message }}</span> }
+                @default                { <span>{{ alerte.message }}</span> }
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr><td colspan="3" class="muted">Aucune alerte.</td></tr>
+        }
+      </tbody>
+    </table>
+
+    <h2>Dernières activités</h2>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Action</th><th>Entité</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        @for (activite of bord.dernieresActivites; track activite.idHistorique) {
+          <tr>
+            <td>{{ activite.dateAction | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>
+              @switch (activite.typeAction) {
+                @case ('Creation')         { <span class="action-ajout">Ajout</span> }
+                @case ('Modification')     { <span class="action-modification">Modification</span> }
+                @case ('Suppression')      { <span class="action-suppression">Suppression</span> }
+                @case ('ChangementStatut')  { <span class="action-statut">Changement de statut</span> }
+                @default                   { <span>{{ activite.typeAction }}</span> }
+              }
+            </td>
+            <td>{{ activite.typeEntite }}</td>
+            <td>{{ activite.description }}</td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="muted">Aucune activité.</td></tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="muted">Chargement...</p>
+  }
+</div>
