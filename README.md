@@ -56,6 +56,10 @@ Le projet propose **8 fonctionnalités distinctes** :
 ### 1. Restaurer les packages .NET
 
 ```bash
+cd ProjetWeb-Aout-ProLog
+```
+
+```bash
 dotnet restore ProManLog.slnx
 ```
 
