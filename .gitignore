@@ -1,4 +1,4 @@
-# ---- Backend .NET ----
+
 bin/
 obj/
 publish/
@@ -6,28 +6,18 @@ publish/
 *.suo
 *.userosscache
 TestResults/
-
-# ---- Frontend Angular / Node ----
 node_modules/
 dist/
 .angular/
 out-tsc/
 npm-debug.log*
 .sass-cache/
-
-# ---- Base de données SQLite (générée au démarrage de l'API) ----
 Database/*.db
 Database/*.db-shm
 Database/*.db-wal
-
-# ---- Environnements de développement ----
 .vs/
 .vscode/
 .idea/
-
-# ---- Fichiers système ----
 Thumbs.db
 .DS_Store
-
-# ---- Divers ----
 *.log
