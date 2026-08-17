@@ -158,28 +158,6 @@ L'application Angular est accessible à l'adresse `http://localhost:4200`.
 
 ---
 
-## Lancement complet (résumé)
-
-Ouvrir **deux terminaux**, tous deux à la racine du dépôt.
-
-**Terminal 1 — Backend :**
-
-```bash
-cd api
-dotnet run
-```
-
-**Terminal 2 — Frontend :**
-
-```bash
-cd front
-npm start
-```
-
-Puis ouvrir `http://localhost:4200` dans un navigateur.
-
----
-
 ## Comptes de test
 
 L'application nécessite une authentification. Deux comptes administrateurs sont
