@@ -11,26 +11,26 @@ comme SGBD.
 
 Le projet propose **8 fonctionnalités distinctes** :
 
-1. **Authentification** — connexion par JWT, protection de toutes les routes de
+1. **Authentification** : connexion par JWT, protection de toutes les routes de
    l'API et du frontend, déconnexion.
-2. **Tableau de bord** — indicateurs clés du mois (prestations en cours et
+2. **Tableau de bord** : indicateurs clés du mois (prestations en cours et
    terminées, chiffre d'affaires, état de la flotte), chacun détaillé dans un
    tableau, graphique du chiffre d'affaires sur six mois, alertes d'échéances
    (entretiens, contrôles techniques, assurances et permis expirant sous
    30 jours) et cinq dernières activités.
-3. **Prestations** — CRUD complet, filtre par statut et changement de statut
+3. **Prestations** : CRUD complet, filtre par statut et changement de statut
    directement depuis la liste.
-4. **Clients** — CRUD complet (entreprise ou particulier) et fiche client
+4. **Clients** : CRUD complet (entreprise ou particulier) et fiche client
    affichant l'historique de ses prestations.
-5. **Flotte** — CRUD complet des véhicules avec suivi du kilométrage, des
+5. **Flotte** : CRUD complet des véhicules avec suivi du kilométrage, des
    entretiens, des contrôles techniques et des assurances.
-6. **Ressources humaines** — CRUD complet des employés, avec informations de
+6. **Ressources humaines** : CRUD complet des employés, avec informations de
    permis pour les chauffeurs, statut et disponibilité.
-7. **Chiffres** — récapitulatif comptable sur six mois sous forme de tableau :
+7. **Chiffres** : récapitulatif comptable sur six mois sous forme de tableau :
    chiffre d'affaires, charges fixes détaillées (salaire, frais, loyer, facture,
    essence), TVA encaissée, TVA payée, TVA à reverser et résultat avant impôt,
    avec une ligne de total.
-8. **Historique** — journalisation automatique des opérations, filtrable par
+8. **Historique** : journalisation automatique des opérations, filtrable par
    période et par type d'action, avec un code couleur : ajout en vert,
    modification en bleu, suppression en rouge et changement de statut en orange.
 
